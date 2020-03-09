@@ -25,22 +25,6 @@ const PollExpBackoff = 1.33;
 const PollMaxMs = 5000;
 
 
-const enum IsWhere {
-  Forum = 1,
-  LoginPopup = 2,
-
-  EmbFirst = 3,
-  EmbeddingPage = 3,
-  EmbCommentsIframe = 4,
-  EmbEditorIframe = 5,
-  EmbLast = 5,
-
-  // Another server, e.g. Google's OAuth login page. But not an
-  // embedding blog post page.
-  External = 10,
-};
-
-
 type ElemRect = { x: number, y: number, width: number, height: number };
 
 // [E2EBUG] Stop using browser.waitUntil — it crashes, on any exception inside,
@@ -227,7 +211,7 @@ function pagesFor(browser) {
     },
 
 
-    isWhere: () => isWhere,
+    isWhere: (): IsWhere => isWhere,
 
 
     updateIsWhere: () => {
@@ -516,7 +500,7 @@ function pagesFor(browser) {
     },
 
 
-    switchToAnyParentFrame: () => {
+    switchToAnyParentFrame: function() {  // arrow fn => `arguments` below won't work
       if (api.isInIframe()) {
         origFrameParent.apply(browser, arguments);
         logMessage("Switched to parent frame.");
